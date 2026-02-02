@@ -1,0 +1,8 @@
+{
+    "name": "bathroom-finder-server",
+    "type": "module",
+    "dependencies": {
+        "express": "^4.19.2",
+        "dotenv": "^16.4.5"
+    }
+}
