@@ -17,7 +17,7 @@
     <div id="loading">Getting your location...</div>
     <div id="map"></div>
     <script>
-        fetch('http://localhost:3001/api/maps-config').then(res => res.json()).then(data => {
+        fetch('http://https://gotta-go-bathroom-finder.onrender.com/api/maps-config').then(res => res.json()).then(data => {
             const script = document.createElement('script');
             script.src = data.mapsUrl;
             script.async = true;
