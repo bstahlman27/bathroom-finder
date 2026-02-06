@@ -120,7 +120,7 @@ async function findBathrooms() {
         return;
     }
     
-    const url = `http://localhost:3001/api/nearby?lat=${userLocation.lat}&lng=${userLocation.lng}`;
+    const url = `https://gotta-go-bathroom-finder.onrender.com/api/nearby?lat=${userLocation.lat}&lng=${userLocation.lng}`;
 
     try {
         const resp = await fetch(url);
@@ -251,7 +251,7 @@ function displayResults(places) {
 async function drawRouteToDestination(placeName) {
     if (!userLocation || !destLocation) return;
 
-    const url = `http://localhost:3001/api/route?oLat=${userLocation.lat}&oLng=${userLocation.lng}&dLat=${destLocation.lat}&dLng=${destLocation.lng}`;
+    const url = `https://gotta-go-bathroom-finder.onrender.com/api/route?oLat=${userLocation.lat}&oLng=${userLocation.lng}&dLat=${destLocation.lat}&dLng=${destLocation.lng}`;
     
     const resp = await fetch(url);
     const data = await resp.json();
