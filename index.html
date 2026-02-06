@@ -16,18 +16,5 @@
     <div id="routeInfo"></div>
     <div id="loading">Getting your location...</div>
     <div id="map"></div>
-    <script>
-        fetch('http://https://gotta-go-bathroom-finder.onrender.com/api/maps-config').then(res => res.json()).then(data => {
-            const script = document.createElement('script');
-            script.src = data.mapsUrl;
-            script.async = true;
-            script.defer = true;
-            document.head.appendChild(script);
-        })
-        .catch(err => {
-            console.error('Failed to load maps API', err);
-            alert('Failed to load map. Please refresh.');
-        })
-    </script>
 </body>
 </html>

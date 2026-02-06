@@ -1,3 +1,22 @@
+const API_BASE = 
+    location.hostname === "localhost" || location.hostname === "127.0.0.1"
+    ? "http://localhost:3001" : "https://gotta-go-bathroom-finder.onrender.com";
+window.API_BASE = API_BASE;
+
+fetch(`${API_BASE}/api/maps-config`)
+    .then(res => res.json())
+    .then(data => {
+        const script = document.createElement('script');
+        script.src = data.mapsUrl;
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+    })
+    .catch(err => {
+        console.error('Failed to load Maps API:', err);
+        alert('Failed to load map. Please refresh.');
+    });
+
 let map;
 let userLocation = null;
 let userMarker = null;
@@ -79,10 +98,8 @@ function initializeMap() {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
         };
-        if (findBtn) {
-            findBtn.disabled = false;
-            recenterBtn.disabled = false;
-        };
+        if (findBtn) findBtn.disabled = false;
+        if (recenterBtn) recenterBtn.disabled = false;
 
         if (!hasCentered) {
             map.setCenter(userLocation);
@@ -120,7 +137,7 @@ async function findBathrooms() {
         return;
     }
     
-    const url = `https://gotta-go-bathroom-finder.onrender.com/api/nearby?lat=${userLocation.lat}&lng=${userLocation.lng}`;
+    const url = `${API_BASE}/api/nearby?lat=${userLocation.lat}&lng=${userLocation.lng}`;
 
     try {
         const resp = await fetch(url);
@@ -251,7 +268,7 @@ function displayResults(places) {
 async function drawRouteToDestination(placeName) {
     if (!userLocation || !destLocation) return;
 
-    const url = `https://gotta-go-bathroom-finder.onrender.com/api/route?oLat=${userLocation.lat}&oLng=${userLocation.lng}&dLat=${destLocation.lat}&dLng=${destLocation.lng}`;
+    const url = `${API_BASE}/api/route?oLat=${userLocation.lat}&oLng=${userLocation.lng}&dLat=${destLocation.lat}&dLng=${destLocation.lng}`;
     
     const resp = await fetch(url);
     const data = await resp.json();
