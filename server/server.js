@@ -12,6 +12,13 @@ app.use((req, res, next) => {
 });
 
 const API_KEY = process.env.MAPS_API_KEY;
+const WEB_API_KEY = process.env.WEB_API_KEY;
+
+app.get("/api/maps-config", (req, res) => {
+    res.json({
+        mapsUrl: `https://maps.googleapis.com/maps/api/js?key=${WEB_API_KEY}&libraries=geometry&callback=initializeMap`
+    });
+});
 
 app.get("/api/nearby", async (req, res) => {
     try {
@@ -30,6 +37,7 @@ app.get("/api/nearby", async (req, res) => {
         "cafe",
         "supermarket",
         "convenience_store",
+        "store",
         "pharmacy",
         "rest_stop",
         "public_bathroom",

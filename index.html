@@ -6,17 +6,28 @@
     <title>Gotta Go Bathroom Finder</title>
     <link rel="stylesheet" href="style.css">
     <script src="app.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA_mLsNp0VBBWyysmAjHdt-HBQgAj4J3-Q&libraries=geometry&callback=initializeMap"
-    defer
-    ></script>
 </head>
 <body>
     <div id="controls">
-        <button id="findBathroomsBtn" disabled>Find bathrooms near me</button>
-        <div id="routeInfo"></div>
         <ul id="results"></ul>
     </div>
+    <button id="findBathroomsBtn" disabled><b>Find nearest bathrooms</b></button>
+    <button id="recenterBtn" disabled>📍 Recenter</button>
+    <div id="routeInfo"></div>
     <div id="loading">Getting your location...</div>
     <div id="map"></div>
+    <script>
+        fetch('http://localhost:3001/api/maps-config').then(res => res.json()).then(data => {
+            const script = document.createElement('script');
+            script.src = data.mapsUrl;
+            script.async = true;
+            script.defer = true;
+            document.head.appendChild(script);
+        })
+        .catch(err => {
+            console.error('Failed to load maps API', err);
+            alert('Failed to load map. Please refresh.');
+        })
+    </script>
 </body>
 </html>
