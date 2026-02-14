@@ -20,6 +20,52 @@ html, body {
     margin-left: 10px;
 }
 
+@media (max-width: 768px) {
+    #controls {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        margin: 0;
+        padding: 10px 15px;
+        max-height: 15vh;
+        border-radius: 20px 20px 0 0;
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+        z-index: 1000;
+        transition: max-height 0.3s ease;
+        box-sizing: border-box;
+    }
+
+    #controls.expanded {
+        max-height: 40vh;
+    }
+
+    #routeInfo {
+        position: fixed !important;
+        bottom: calc(15vh + 10px) !important;
+        left: 10px !important;
+        right: 10px !important;
+        width: auto !important;
+        max-width: calc(100% - 20px) !important;
+        transform: none !important;
+        white-space: normal !important;
+        text-align: center !important;
+        transition: bottom 0.3s ease;
+    }
+
+    #controls.expanded ~ #routeInfo {
+        bottom: calc(40vh + 10px) !important;
+    }
+
+    #recenterBtn {
+        top: 68px !important;
+        left: 10px !important;
+        right: auto !important;
+        bottom: auto !important;
+    }
+}
+
 #results {
     list-style: none;
     padding: 0;

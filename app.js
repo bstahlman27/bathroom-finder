@@ -56,12 +56,24 @@ function initializeMap() {
     map = new google.maps.Map(document.getElementById("map"), {
         center: { lat: 0, lng: 0},
         zoom: 2,
+        streetViewControl: true,
+        streetViewControlOptions: {
+            position: window.innerWidth <= 768 
+                ? google.maps.ControlPosition.RIGHT_TOP 
+                : google.maps.ControlPosition.RIGHT_BOTTOM
+        },
+        fullscreenControl: true,
+        fullscreenControlOptions: {
+            position: google.maps.ControlPosition.RIGHT_TOP
+        }
     });
 
     const controlsEl = document.getElementById("controls");
     if (controlsEl) {
         controlsEl.style.display = "none";
-        map.controls[google.maps.ControlPosition.LEFT_TOP].push(controlsEl);
+        if (window.innerWidth > 768) {
+            map.controls[google.maps.ControlPosition.LEFT_TOP].push(controlsEl);
+        }
     }
     
     const loadingEl = document.getElementById("loading");
@@ -69,13 +81,68 @@ function initializeMap() {
 
     setupButtons();
 
+    if (window.innerWidth <= 768) {
+        map.addListener("dragstart", () => {
+            if (controlsEl) controlsEl.classList.remove("expanded");
+        });
+        
+        map.addListener("zoom_changed", () => {
+            if (controlsEl) controlsEl.classList.remove("expanded");
+        });
+
+        recenterBtn.innerText = "📍";
+
+        function expandList(){
+            controlsEl.classList.add("expanded");
+        }
+        if (controlsEl) {
+            controlsEl.addEventListener("touchstart", expandList);
+            controlsEl.addEventListener("mousedown", expandList);
+            controlsEl.addEventListener("scroll", expandList);
+        }
+
+        const streetView = map.getStreetView();
+        streetView.addListener('visible_changed', function() {
+        const isStreetViewVisible = streetView.getVisible();
+        const controlsEl = document.getElementById("controls");
+        const routeInfo = document.getElementById("routeInfo");
+        
+        if (isStreetViewVisible) {
+            if (controlsEl) controlsEl.style.display = "none";
+            if (findBtn) findBtn.style.display = "none";
+            if (recenterBtn) recenterBtn.style.display = "none";
+            if (routeInfo) routeInfo.style.display="none";
+            
+        } else {
+            if (controlsEl && controlsEl.innerHTML.trim() !== "") {
+                controlsEl.style.display = "block";
+            }
+            if (findBtn) findBtn.style.display = "block";
+            if (recenterBtn) recenterBtn.style.display = "block";
+            if (routeInfo) routeInfo.style.display = "block";
+        }
+    });
+    }
+
     if (findBtn) {
+        let firstClick = true;
         findBtn.addEventListener("click", () => {
             findBathrooms();
             if (controlsEl) {
                 controlsEl.style.display = "block";
             }
             findBtn.innerHTML = `<b>Search again</b>`;
+            
+            if (firstClick && window.innerWidth <= 768) {
+                findBtn.style.top = "90px";
+                findBtn.style.left = "50%";
+                findBtn.style.bottom = "auto";
+                findBtn.style.right = "auto";
+                findBtn.style.transform = "translateX(-50%)";
+                findBtn.style.padding = "10px 14px";
+                findBtn.style.fontSize = "13px";
+                firstClick = false;
+            }
         });
     }
 

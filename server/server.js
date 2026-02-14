@@ -26,13 +26,12 @@ app.get("/api/nearby", async (req, res) => {
         const lng = Number(req.query.lng);
 
         if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
-        return res.status(400).json({ error: "Invalid lat/lng" });
+            return res.status(400).json({ error: "Invalid lat/lng" });
         }
 
         const radius = 3000;
 
         const types = [
-        "gas_station",
         "fast_food_restaurant",
         "cafe",
         "supermarket",
@@ -69,21 +68,20 @@ app.get("/api/nearby", async (req, res) => {
                 "places.id,places.displayName,places.location,places.formattedAddress,places.types",
             },
             body: JSON.stringify({ ...baseBody, includedTypes: [t] }),
-        }).then(async (r) => ({ ok: r.ok, status: r.status, data: await r.json(), type: t }))
-        );
+        }).then(async (r) => ({ ok: r.ok, status: r.status, data: await r.json(), type: t })));
 
         const responses = await Promise.all(requests);
 
         for (const r of responses) {
-        if (!r.ok) console.warn("Nearby type failed:", r.type, r.status, r.data?.error?.message);
+            if (!r.ok) console.warn("Nearby type failed:", r.type, r.status, r.data?.error?.message);
         }
 
         const allPlaces = responses.flatMap((r) => r.data?.places ?? []);
 
         const mapById = new Map();
-        for (const p of allPlaces) {
-        if (!p?.id) continue;
-        if (!mapById.has(p.id)) mapById.set(p.id, p);
+            for (const p of allPlaces) {
+            if (!p?.id) continue;
+            if (!mapById.has(p.id)) mapById.set(p.id, p);
         }
 
         res.json({ places: Array.from(mapById.values()) });
